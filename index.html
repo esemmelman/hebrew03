@@ -10,20 +10,16 @@
 </head>
 <body>
   <aside>
-    <a class="brand" href="#aleph"><span lang="he">א</span> ALEPH STUDIO</a>
-    <p class="eyebrow">HEBREW, ONE STEP AT A TIME</p>
-    <nav aria-label="Lessons">
-      <button data-lesson="0" aria-current="page"><span class="number">01</span><span>Aleph</span></button>
-      <button data-lesson="1"><span class="number">02</span><span>Kamatz, Patach, Segol</span></button>
-      <button data-lesson="2"><span class="number">03</span><span>Tzere, Cherek, and Cholem</span></button>
-    </nav>
-    <div class="sidebar-note"><span class="tiny-hebrew" lang="he">אבג</span><p>A little practice.<br>A new way to read.</p></div>
+    <label for="lessons">Lessons</label>
+    <select id="lessons" size="3" aria-label="Lessons">
+      <option value="0" selected>Aleph</option>
+      <option value="1">Kamatz, Patach, Segol</option>
+      <option value="2">Tzere, Cherek, and Cholem</option>
+    </select>
   </aside>
   <main>
-    <header><span>THE READING ROOM</span><span id="step">LESSON 01 / 03</span></header>
-    <section aria-labelledby="title">
-      <div class="heading"><div><p class="eyebrow" id="category">MEET YOUR FIRST LETTER</p><h1 id="title">It starts with Aleph.</h1></div><button id="shuffle" hidden>↻ &nbsp; Shuffle</button></div>
-      <p class="intro" id="intro"></p>
+    <section aria-label="Hebrew reading practice">
+      <div class="toolbar"><button id="shuffle" hidden>↻ &nbsp; Shuffle</button></div>
       <div id="practice" class="practice" aria-label="Hebrew practice area"></div>
       <div id="legend" class="legend"></div>
       <footer><span id="tip"></span><span lang="he" class="footer-hebrew">שלום</span></footer>

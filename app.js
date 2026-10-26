@@ -13,9 +13,8 @@ function shuffledVowels(vowels) {
 function render(index) {
   current=index;
   const lesson=lessons[index];
-  for(const id of ['title','category','intro','tip']) document.getElementById(id).textContent=lesson[id];
-  document.getElementById('step').textContent=`LESSON 0${index+1} / 03`;
-  document.querySelectorAll('[data-lesson]').forEach((button,i)=>{if(i===index)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+  document.getElementById('tip').textContent=lesson.tip;
+  document.getElementById('lessons').value=String(index);
   document.getElementById('shuffle').hidden=!lesson.vowels;
   const practice=document.getElementById('practice');
   const legend=document.getElementById('legend');
@@ -38,7 +37,6 @@ function render(index) {
     }
   }
 }
-document.querySelectorAll('[data-lesson]').forEach(button=>button.addEventListener('click',()=>render(Number(button.dataset.lesson))));
+document.getElementById('lessons').addEventListener('change',event=>render(Number(event.target.value)));
 document.getElementById('shuffle').addEventListener('click',()=>{render(current);document.getElementById('announcement').textContent='New randomized practice grid ready.';});
-document.querySelector('.brand').addEventListener('click',()=>render(0));
 render(0);
