@@ -10,6 +10,7 @@ lessons.push({ vowels: [
   {text:'או\u05bc',name:'Shuruq',sound:'oo'},
   {text:'או\u05b9',name:'Cholem vav',sound:'oh'}
 ] });
+lessons.push({ vowels: [...lessons[3].vowels, ...lessons[4].vowels] });
 let current = 0;
 function shuffledVowels(vowels) {
   // Distribute all lesson vowels evenly, then use a Fisher–Yates shuffle.
