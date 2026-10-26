@@ -27,10 +27,12 @@ function render(index) {
     const grid=document.createElement('div');grid.className='grid';grid.lang='he';grid.dir='rtl';
     const vowels=shuffledVowels(lesson.vowels);
     for(const [position,vowel] of vowels.entries()){
+      const cell=document.createElement('span');cell.className='glyph';
+      const letter=document.createElement('span');letter.className='numbered-letter';letter.textContent='א'+vowel.mark;letter.setAttribute('aria-label',`Aleph with ${vowel.name}, ${vowel.sound}`);
       if(position%5===0){
-        const number=document.createElement('span');number.className='line-number';number.lang='en';number.dir='ltr';number.textContent=String(position/5+1);number.setAttribute('aria-label',`Line ${position/5+1}`);grid.append(number);
+        const number=document.createElement('span');number.className='line-number';number.lang='en';number.dir='ltr';number.textContent=String(position/5+1);number.setAttribute('aria-label',`Line ${position/5+1}`);letter.append(number);
       }
-      const cell=document.createElement('span');cell.className='glyph';cell.textContent='א'+vowel.mark;cell.setAttribute('aria-label',`Aleph with ${vowel.name}, ${vowel.sound}`);grid.append(cell);
+      cell.append(letter);grid.append(cell);
     }
     practice.append(grid);
     for(const vowel of lesson.vowels){
