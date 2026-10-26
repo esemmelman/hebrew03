@@ -13,14 +13,17 @@ lessons.push({ vowels: [
 lessons.push({ vowels: [...lessons[3].vowels, ...lessons[4].vowels] });
 lessons.push({ letter:'ב\u05bc', name:'Bet' });
 lessons.push({ letter:'ב\u05bc', name:'Bet', vowels: [...lessons[5].vowels] });
-for(const [letter,name] of [['ג','Gimel'],['ד','Dalet'],['ה','He']]){
+for(const [letter,name] of [['ג','Gimel'],['ד','Dalet'],['ה','Heh']]){
   lessons.push({letter,name});
   lessons.push({letter,name,vowels:[...lessons[5].vowels]});
 }
+lessons.push({words:true,vowels:[...lessons[5].vowels]});
+const practiceLetters=['א','ב\u05bc','ג','ד','ה'];
+function withVowel(letter,vowel){return letter+(vowel.text ? vowel.text.slice(1) : vowel.mark);}
 let current = 0;
-function shuffledVowels(vowels) {
+function shuffledVowels(vowels, count=25) {
   // Distribute all lesson vowels evenly, then use a Fisher–Yates shuffle.
-  const cells = Array.from({length:25}, (_, i) => vowels[i % vowels.length]);
+  const cells = Array.from({length:count}, (_, i) => vowels[i % vowels.length]);
   for(let i=cells.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]];}
   return cells;
 }
@@ -41,11 +44,18 @@ function render(index) {
     const caption=document.createElement('div');caption.className='letter-caption';caption.textContent=letterName.toUpperCase()+' / '+baseLetter;
     wrapper.append(aleph,caption);practice.append(wrapper);
   }else{
-    const grid=document.createElement('div');grid.className='grid';grid.lang='he';grid.dir='rtl';
+    const grid=document.createElement('div');grid.className=lesson.words ? 'grid word-grid' : 'grid';grid.lang='he';grid.dir='rtl';
     const vowels=shuffledVowels(lesson.vowels);
+    const secondVowels=lesson.words ? shuffledVowels(lesson.vowels) : [];
+    const letters=lesson.words ? shuffledVowels(practiceLetters,50) : [];
     for(const [position,vowel] of vowels.entries()){
       const cell=document.createElement('span');cell.className='glyph';
       const letter=document.createElement('span');letter.className='numbered-letter';letter.textContent=vowelGlyph(vowel);letter.setAttribute('aria-label',`${letterName} with ${vowel.name}, ${vowel.sound}`);
+      if(lesson.words){
+        const first=letters[position*2],second=letters[position*2+1];
+        letter.textContent=withVowel(first,vowel)+withVowel(second,secondVowels[position]);
+        letter.setAttribute('aria-label',`Two-letter combination: ${letter.textContent}`);
+      }
       if(position%5===0){
         const number=document.createElement('span');number.className='line-number';number.lang='en';number.dir='ltr';number.textContent=String(position/5+1)+'.';number.setAttribute('aria-label',`Line ${position/5+1}`);letter.append(number);
       }
