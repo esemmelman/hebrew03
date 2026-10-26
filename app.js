@@ -46,14 +46,20 @@ function render(index) {
   }else{
     const grid=document.createElement('div');grid.className=lesson.words ? 'grid word-grid' : 'grid';grid.lang='he';grid.dir='rtl';
     const vowels=shuffledVowels(lesson.vowels);
-    const secondVowels=lesson.words ? shuffledVowels(lesson.vowels) : [];
+    const secondVowels=lesson.words ? shuffledVowels(lesson.vowels.filter(v=>!v.text && v.mark!=='\u05b0')) : [];
     const letters=lesson.words ? shuffledVowels(practiceLetters,50) : [];
     for(const [position,vowel] of vowels.entries()){
       const cell=document.createElement('span');cell.className='glyph';
       const letter=document.createElement('span');letter.className='numbered-letter';letter.textContent=vowelGlyph(vowel);letter.setAttribute('aria-label',`${letterName} with ${vowel.name}, ${vowel.sound}`);
       if(lesson.words){
-        const first=letters[position*2],second=letters[position*2+1];
-        letter.textContent=withVowel(first,vowel)+withVowel(second,secondVowels[position]);
+        let first=letters[position*2];
+        const second=letters[position*2+1];
+        if(vowel.mark==='\u05b0' && first==='א'){
+          const alternatives=practiceLetters.filter(char=>char!=='א');
+          first=alternatives[Math.floor(Math.random()*alternatives.length)];
+        }
+        // Vav-based vowels already supply the second letter of the word.
+        letter.textContent=vowel.text ? withVowel(first,vowel) : withVowel(first,vowel)+withVowel(second,secondVowels[position]);
         letter.setAttribute('aria-label',`Two-letter combination: ${letter.textContent}`);
       }
       if(position%5===0){
@@ -64,7 +70,7 @@ function render(index) {
     practice.append(grid);
     for(const vowel of lesson.vowels){
       const item=document.createElement('div');item.className='legend-item';
-      const glyph=document.createElement('span');glyph.className='legend-glyph';glyph.lang='he';glyph.textContent=vowelGlyph(vowel);
+      const glyph=document.createElement('span');glyph.className='legend-glyph';glyph.lang='he';glyph.textContent=lesson.words && vowel.mark==='\u05b0' ? withVowel('ב\u05bc',vowel) : vowelGlyph(vowel);
       const label=document.createElement('span');label.textContent=`${vowel.name} · ${vowel.sound}`;item.append(glyph,label);legend.append(item);
     }
   }
