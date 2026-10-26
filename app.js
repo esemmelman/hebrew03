@@ -31,7 +31,7 @@ function render(index) {
       const cell=document.createElement('span');cell.className='glyph';
       const letter=document.createElement('span');letter.className='numbered-letter';letter.textContent='א'+vowel.mark;letter.setAttribute('aria-label',`Aleph with ${vowel.name}, ${vowel.sound}`);
       if(position%5===0){
-        const number=document.createElement('span');number.className='line-number';number.lang='en';number.dir='ltr';number.textContent=String(position/5+1);number.setAttribute('aria-label',`Line ${position/5+1}`);letter.append(number);
+        const number=document.createElement('span');number.className='line-number';number.lang='en';number.dir='ltr';number.textContent=String(position/5+1)+'.';number.setAttribute('aria-label',`Line ${position/5+1}`);letter.append(number);
       }
       cell.append(letter);grid.append(cell);
     }
