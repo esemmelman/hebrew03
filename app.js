@@ -4,6 +4,12 @@ const lessons = [
   { title: 'Three more sounds to explore.', category: 'KEEP GOING · MIX IT UP', intro: 'Practice Aleph with Tzere, Cherek, and Cholem in a random mix. Read from right to left. Shuffle whenever you want a new challenge.', tip: 'Cherek is also spelled Hiriq; Cholem is also spelled Holam.', vowels: [{mark:'\u05b5',name:'Tzere',sound:'eh'},{mark:'\u05b4',name:'Cherek',sound:'ee'},{mark:'\u05b9',name:'Cholem',sound:'oh'}] }
 ];
 lessons.push({ vowels: [...lessons[1].vowels, ...lessons[2].vowels] });
+lessons.push({ vowels: [
+  {mark:'\u05b0',name:'Sheva',sound:'silent / short eh'},
+  {mark:'\u05bb',name:'Qibbutz',sound:'oo'},
+  {text:'או\u05bc',name:'Shuruq',sound:'oo'},
+  {text:'או\u05b9',name:'Cholem vav',sound:'oh'}
+] });
 let current = 0;
 function shuffledVowels(vowels) {
   // Distribute all lesson vowels evenly, then use a Fisher–Yates shuffle.
@@ -29,7 +35,7 @@ function render(index) {
     const vowels=shuffledVowels(lesson.vowels);
     for(const [position,vowel] of vowels.entries()){
       const cell=document.createElement('span');cell.className='glyph';
-      const letter=document.createElement('span');letter.className='numbered-letter';letter.textContent='א'+vowel.mark;letter.setAttribute('aria-label',`Aleph with ${vowel.name}, ${vowel.sound}`);
+      const letter=document.createElement('span');letter.className='numbered-letter';letter.textContent=vowel.text ?? 'א'+vowel.mark;letter.setAttribute('aria-label',`Aleph with ${vowel.name}, ${vowel.sound}`);
       if(position%5===0){
         const number=document.createElement('span');number.className='line-number';number.lang='en';number.dir='ltr';number.textContent=String(position/5+1)+'.';number.setAttribute('aria-label',`Line ${position/5+1}`);letter.append(number);
       }
@@ -38,7 +44,7 @@ function render(index) {
     practice.append(grid);
     for(const vowel of lesson.vowels){
       const item=document.createElement('div');item.className='legend-item';
-      const glyph=document.createElement('span');glyph.className='legend-glyph';glyph.lang='he';glyph.textContent='א'+vowel.mark;
+      const glyph=document.createElement('span');glyph.className='legend-glyph';glyph.lang='he';glyph.textContent=vowel.text ?? 'א'+vowel.mark;
       const label=document.createElement('span');label.textContent=`${vowel.name} · ${vowel.sound}`;item.append(glyph,label);legend.append(item);
     }
   }
