@@ -11,6 +11,8 @@ lessons.push({ vowels: [
   {text:'או\u05b9',name:'Cholem vav',sound:'oh'}
 ] });
 lessons.push({ vowels: [...lessons[3].vowels, ...lessons[4].vowels] });
+lessons.push({ letter:'ב\u05bc', name:'Bet' });
+lessons.push({ letter:'ב\u05bc', name:'Bet', vowels: [...lessons[5].vowels] });
 let current = 0;
 function shuffledVowels(vowels) {
   // Distribute all lesson vowels evenly, then use a Fisher–Yates shuffle.
@@ -21,6 +23,9 @@ function shuffledVowels(vowels) {
 function render(index) {
   current=index;
   const lesson=lessons[index];
+  const baseLetter=lesson.letter ?? 'א';
+  const letterName=lesson.name ?? 'Aleph';
+  const vowelGlyph=vowel=>vowel.text ? baseLetter+vowel.text.slice(1) : baseLetter+vowel.mark;
   document.getElementById('lessons').value=String(index);
   document.getElementById('shuffle').hidden=!lesson.vowels;
   const practice=document.getElementById('practice');
@@ -28,15 +33,15 @@ function render(index) {
   practice.replaceChildren();legend.replaceChildren();
   if(!lesson.vowels){
     const wrapper=document.createElement('div');
-    const aleph=document.createElement('span');aleph.className='big-aleph';aleph.lang='he';aleph.textContent='א';aleph.setAttribute('aria-label','Aleph');
-    const caption=document.createElement('div');caption.className='letter-caption';caption.textContent='ALEPH / א';
+    const aleph=document.createElement('span');aleph.className='big-aleph';aleph.lang='he';aleph.textContent=baseLetter;aleph.setAttribute('aria-label',letterName);
+    const caption=document.createElement('div');caption.className='letter-caption';caption.textContent=letterName.toUpperCase()+' / '+baseLetter;
     wrapper.append(aleph,caption);practice.append(wrapper);
   }else{
     const grid=document.createElement('div');grid.className='grid';grid.lang='he';grid.dir='rtl';
     const vowels=shuffledVowels(lesson.vowels);
     for(const [position,vowel] of vowels.entries()){
       const cell=document.createElement('span');cell.className='glyph';
-      const letter=document.createElement('span');letter.className='numbered-letter';letter.textContent=vowel.text ?? 'א'+vowel.mark;letter.setAttribute('aria-label',`Aleph with ${vowel.name}, ${vowel.sound}`);
+      const letter=document.createElement('span');letter.className='numbered-letter';letter.textContent=vowelGlyph(vowel);letter.setAttribute('aria-label',`${letterName} with ${vowel.name}, ${vowel.sound}`);
       if(position%5===0){
         const number=document.createElement('span');number.className='line-number';number.lang='en';number.dir='ltr';number.textContent=String(position/5+1)+'.';number.setAttribute('aria-label',`Line ${position/5+1}`);letter.append(number);
       }
@@ -45,7 +50,7 @@ function render(index) {
     practice.append(grid);
     for(const vowel of lesson.vowels){
       const item=document.createElement('div');item.className='legend-item';
-      const glyph=document.createElement('span');glyph.className='legend-glyph';glyph.lang='he';glyph.textContent=vowel.text ?? 'א'+vowel.mark;
+      const glyph=document.createElement('span');glyph.className='legend-glyph';glyph.lang='he';glyph.textContent=vowelGlyph(vowel);
       const label=document.createElement('span');label.textContent=`${vowel.name} · ${vowel.sound}`;item.append(glyph,label);legend.append(item);
     }
   }
