@@ -13,6 +13,10 @@ lessons.push({ vowels: [
 lessons.push({ vowels: [...lessons[3].vowels, ...lessons[4].vowels] });
 lessons.push({ letter:'ב\u05bc', name:'Bet' });
 lessons.push({ letter:'ב\u05bc', name:'Bet', vowels: [...lessons[5].vowels] });
+for(const [letter,name] of [['ג','Gimel'],['ד','Dalet'],['ה','He']]){
+  lessons.push({letter,name});
+  lessons.push({letter,name,vowels:[...lessons[5].vowels]});
+}
 let current = 0;
 function shuffledVowels(vowels) {
   // Distribute all lesson vowels evenly, then use a Fisher–Yates shuffle.
