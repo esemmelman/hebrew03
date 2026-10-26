@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A simple Hebrew reading tutorial. Learn Aleph and practice six Hebrew vowels.">
+  <title>Aleph · Hebrew reading practice</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <aside>
+    <a class="brand" href="#aleph"><span lang="he">א</span> ALEPH STUDIO</a>
+    <p class="eyebrow">HEBREW, ONE STEP AT A TIME</p>
+    <nav aria-label="Lessons">
+      <button data-lesson="0" aria-current="page"><span class="number">01</span><span>Aleph</span></button>
+      <button data-lesson="1"><span class="number">02</span><span>Kamatz, Patach, Segol</span></button>
+      <button data-lesson="2"><span class="number">03</span><span>Tzere, Cherek, and Cholem</span></button>
+    </nav>
+    <div class="sidebar-note"><span class="tiny-hebrew" lang="he">אבג</span><p>A little practice.<br>A new way to read.</p></div>
+  </aside>
+  <main>
+    <header><span>THE READING ROOM</span><span id="step">LESSON 01 / 03</span></header>
+    <section aria-labelledby="title">
+      <div class="heading"><div><p class="eyebrow" id="category">MEET YOUR FIRST LETTER</p><h1 id="title">It starts with Aleph.</h1></div><button id="shuffle" hidden>↻ &nbsp; Shuffle</button></div>
+      <p class="intro" id="intro"></p>
+      <div id="practice" class="practice" aria-label="Hebrew practice area"></div>
+      <div id="legend" class="legend"></div>
+      <footer><span id="tip"></span><span lang="he" class="footer-hebrew">שלום</span></footer>
+      <p id="announcement" class="sr-only" aria-live="polite"></p>
+    </section>
+  </main>
+</body>
+</html>
