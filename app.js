@@ -3,9 +3,10 @@ const lessons = [
   { title: 'Your first vowel sounds.', category: 'ADD A VOWEL · READ A SOUND', intro: 'Practice Aleph with Kamatz, Patach, and Segol. Read each row from right to left, then move down to the next row.', tip: 'Kamatz and Patach: “ah” · Segol: “eh” (Modern Hebrew).', vowels: [{mark:'\u05b8',name:'Kamatz',sound:'ah'},{mark:'\u05b7',name:'Patach',sound:'ah'},{mark:'\u05b6',name:'Segol',sound:'eh'}] },
   { title: 'Three more sounds to explore.', category: 'KEEP GOING · MIX IT UP', intro: 'Practice Aleph with Tzere, Cherek, and Cholem in a random mix. Read from right to left. Shuffle whenever you want a new challenge.', tip: 'Cherek is also spelled Hiriq; Cholem is also spelled Holam.', vowels: [{mark:'\u05b5',name:'Tzere',sound:'eh'},{mark:'\u05b4',name:'Cherek',sound:'ee'},{mark:'\u05b9',name:'Cholem',sound:'oh'}] }
 ];
+lessons.push({ vowels: [...lessons[1].vowels, ...lessons[2].vowels] });
 let current = 0;
 function shuffledVowels(vowels) {
-  // Balance the three vowels (9, 8, 8), then use a Fisher–Yates shuffle.
+  // Distribute all lesson vowels evenly, then use a Fisher–Yates shuffle.
   const cells = Array.from({length:25}, (_, i) => vowels[i % vowels.length]);
   for(let i=cells.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]];}
   return cells;
