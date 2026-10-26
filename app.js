@@ -13,7 +13,6 @@ function shuffledVowels(vowels) {
 function render(index) {
   current=index;
   const lesson=lessons[index];
-  document.getElementById('tip').textContent=lesson.tip;
   document.getElementById('lessons').value=String(index);
   document.getElementById('shuffle').hidden=!lesson.vowels;
   const practice=document.getElementById('practice');
