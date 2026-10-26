@@ -26,7 +26,11 @@ function render(index) {
     wrapper.append(aleph,caption);practice.append(wrapper);
   }else{
     const grid=document.createElement('div');grid.className='grid';grid.lang='he';grid.dir='rtl';
-    for(const vowel of shuffledVowels(lesson.vowels)){
+    const vowels=shuffledVowels(lesson.vowels);
+    for(const [position,vowel] of vowels.entries()){
+      if(position%5===0){
+        const number=document.createElement('span');number.className='line-number';number.lang='en';number.dir='ltr';number.textContent=String(position/5+1);number.setAttribute('aria-label',`Line ${position/5+1}`);grid.append(number);
+      }
       const cell=document.createElement('span');cell.className='glyph';cell.textContent='א'+vowel.mark;cell.setAttribute('aria-label',`Aleph with ${vowel.name}, ${vowel.sound}`);grid.append(cell);
     }
     practice.append(grid);
