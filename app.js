@@ -20,6 +20,7 @@ for(const [letter,name] of [['ג','Gimel'],['ד','Dalet'],['ה','Heh']]){
   lessons.push({letter,name,vowels:[...lessons[5].vowels]});
 }
 lessons.push({words:true,vowels:[...lessons[5].vowels]});
+lessons.push({words:true,oneSyllable:true,vowels:lessons[5].vowels.filter(v=>!v.text && v.mark!=='\u05b0')});
 const practiceLetters=['א','ב\u05bc','ג','ד','ה'];
 function withVowel(letter,vowel){return letter+(vowel.text ? vowel.text.slice(1) : vowel.mark);}
 let current = 0;
@@ -61,7 +62,7 @@ function render(index) {
           first=alternatives[Math.floor(Math.random()*alternatives.length)];
         }
         // Vav-based vowels already supply the second letter of the word.
-        letter.textContent=vowel.text ? withVowel(first,vowel) : withVowel(first,vowel)+withVowel(second,secondVowels[position]);
+        letter.textContent=lesson.oneSyllable ? withVowel(first,vowel)+second : vowel.text ? withVowel(first,vowel) : withVowel(first,vowel)+withVowel(second,secondVowels[position]);
         letter.setAttribute('aria-label',`Two-letter combination: ${letter.textContent}`);
       }
       if(position%5===0){
