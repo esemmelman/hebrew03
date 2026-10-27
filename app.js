@@ -25,16 +25,18 @@ const practiceLetters=['א','ב\u05bc','ג','ד','ה'];
 function withVowel(letter,vowel){return letter+(vowel.text ? vowel.text.slice(1) : vowel.mark);}
 let current = 0;
 let practiceTimer;
+let lastPracticeGlyph;
 const practiceSpeeds = { slow: 5000, medium: 3000, fast: 1000 };
 
 function startTimedPractice(speed) {
   clearTimeout(practiceTimer);
-  const learned = lessons.slice(0, current + 1);
+  const learned = lessons;
   const letters = [...new Set(['א', ...learned.map(lesson => lesson.letter).filter(Boolean)])];
   const vowels = [...new Map(learned.flatMap(lesson => lesson.vowels ?? []).map(vowel => [vowel.name, vowel])).values()];
   const practice = document.getElementById('practice');
   document.body.classList.add('timed-practice');
   document.getElementById('shuffle').hidden = true;
+  document.getElementById('show-previous').hidden = false;
   document.getElementById('legend').replaceChildren();
   document.getElementById('lessons').value = speed;
   const showRandom = () => {
@@ -44,7 +46,8 @@ function startTimedPractice(speed) {
     glyph.className = 'big-aleph';
     glyph.lang = 'he';
     glyph.dir = 'rtl';
-    glyph.textContent = vowel ? withVowel(letter, vowel) : letter;
+    glyph.textContent = withVowel(letter, vowel);
+    lastPracticeGlyph = glyph;
     practice.replaceChildren(glyph);
   };
   showRandom();
@@ -63,6 +66,7 @@ function shuffledVowels(vowels, count=25) {
 }
 function render(index) {
   clearTimeout(practiceTimer);
+  document.getElementById('show-previous').hidden = true;
   document.body.classList.remove('timed-practice');
   current=index;
   const lesson=lessons[index];
@@ -117,4 +121,11 @@ document.getElementById('lessons').addEventListener('change', event => {
   else render(Number(value));
 });
 document.getElementById('shuffle').addEventListener('click',()=>{render(current);document.getElementById('announcement').textContent='New randomized practice grid ready.';});
+document.getElementById('show-previous').addEventListener('click', () => {
+  if (!lastPracticeGlyph) return;
+  clearTimeout(practiceTimer);
+  document.getElementById('practice').replaceChildren(lastPracticeGlyph);
+  document.getElementById('lessons').selectedIndex = -1;
+  document.getElementById('announcement').textContent = 'Previous letter and vowel shown. Select a speed to try another letter.';
+});
 render(0);
