@@ -24,6 +24,33 @@ lessons.push({words:true,oneSyllable:true,vowels:lessons[5].vowels.filter(v=>!v.
 const practiceLetters=['א','ב\u05bc','ג','ד','ה'];
 function withVowel(letter,vowel){return letter+(vowel.text ? vowel.text.slice(1) : vowel.mark);}
 let current = 0;
+let practiceTimer;
+const practiceSpeeds = { slow: 5000, medium: 3000, fast: 1000 };
+
+function startTimedPractice(speed) {
+  clearInterval(practiceTimer);
+  const learned = lessons.slice(0, current + 1);
+  const letters = [...new Set(['א', ...learned.map(lesson => lesson.letter).filter(Boolean)])];
+  const vowels = [...new Map(learned.flatMap(lesson => lesson.vowels ?? []).map(vowel => [vowel.name, vowel])).values()];
+  const practice = document.getElementById('practice');
+  document.body.classList.add('timed-practice');
+  document.getElementById('shuffle').hidden = true;
+  document.getElementById('legend').replaceChildren();
+  document.getElementById('lessons').value = speed;
+  const showRandom = () => {
+    const letter = letters[Math.floor(Math.random() * letters.length)];
+    const vowel = vowels[Math.floor(Math.random() * vowels.length)];
+    const glyph = document.createElement('span');
+    glyph.className = 'big-aleph';
+    glyph.lang = 'he';
+    glyph.dir = 'rtl';
+    glyph.textContent = vowel ? withVowel(letter, vowel) : letter;
+    practice.replaceChildren(glyph);
+  };
+  showRandom();
+  practiceTimer = setInterval(showRandom, practiceSpeeds[speed]);
+  document.getElementById('announcement').textContent = `${speed} practice: a random learned letter${vowels.length ? ' and vowel' : ''} every ${practiceSpeeds[speed] / 1000} seconds. Select a lesson to stop.`;
+}
 function shuffledVowels(vowels, count=25) {
   // Distribute all lesson vowels evenly, then use a Fisher–Yates shuffle.
   const cells = Array.from({length:count}, (_, i) => vowels[i % vowels.length]);
@@ -31,6 +58,8 @@ function shuffledVowels(vowels, count=25) {
   return cells;
 }
 function render(index) {
+  clearInterval(practiceTimer);
+  document.body.classList.remove('timed-practice');
   current=index;
   const lesson=lessons[index];
   const baseLetter=lesson.letter ?? 'א';
@@ -78,6 +107,10 @@ function render(index) {
     }
   }
 }
-document.getElementById('lessons').addEventListener('change',event=>render(Number(event.target.value)));
+document.getElementById('lessons').addEventListener('change', event => {
+  const value = event.target.value;
+  if (Object.hasOwn(practiceSpeeds, value)) startTimedPractice(value);
+  else render(Number(value));
+});
 document.getElementById('shuffle').addEventListener('click',()=>{render(current);document.getElementById('announcement').textContent='New randomized practice grid ready.';});
 render(0);

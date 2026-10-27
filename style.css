@@ -5,5 +5,6 @@
 .grid{padding-right:clamp(65px,7vw,95px)}@media(max-width:850px){.grid{padding-right:55px}.line-number{margin-left:25px}}
 
 option{white-space:normal;overflow-wrap:anywhere}
+.timed-practice main{background:white}.timed-practice .practice{border:0;min-height:calc(100vh - 36px)}
 
 .word-grid .glyph{font-size:clamp(32px,4vw,64px);white-space:nowrap}.word-grid{column-gap:16px}@media(max-width:850px){.word-grid{padding-right:30px;column-gap:8px}.word-grid .glyph{font-size:clamp(23px,5vw,42px)}.word-grid .line-number{margin-left:6px}}
