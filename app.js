@@ -26,16 +26,24 @@ function withVowel(letter,vowel){return letter+(vowel.text ? vowel.text.slice(1)
 let current = 0;
 let practiceTimer;
 let lastPracticeGlyph;
+let lastPracticeSpeed;
 const practiceSpeeds = { slow: 5000, medium: 3000, fast: 1000 };
 
-function startTimedPractice(speed) {
+function resetScroll() {
+  window.scrollTo(0, 0);
+  document.getElementById('lessons').scrollTop = 0;
+}
+
+function startTimedPractice(speed, repeat = false) {
   clearTimeout(practiceTimer);
+  lastPracticeSpeed = speed;
   const learned = lessons;
   const letters = [...new Set(['א', ...learned.map(lesson => lesson.letter).filter(Boolean)])];
   const vowels = [...new Map(learned.flatMap(lesson => lesson.vowels ?? []).map(vowel => [vowel.name, vowel])).values()];
   const practice = document.getElementById('practice');
   document.body.classList.add('timed-practice');
   document.getElementById('shuffle').hidden = true;
+  document.getElementById('again').hidden = false;
   document.getElementById('show-previous').hidden = false;
   document.getElementById('legend').replaceChildren();
   document.getElementById('lessons').value = speed;
@@ -50,7 +58,9 @@ function startTimedPractice(speed) {
     lastPracticeGlyph = glyph;
     practice.replaceChildren(glyph);
   };
-  showRandom();
+  if (repeat && lastPracticeGlyph) practice.replaceChildren(lastPracticeGlyph);
+  else showRandom();
+  resetScroll();
   practiceTimer = setTimeout(() => {
     practice.replaceChildren();
     document.getElementById('lessons').selectedIndex = -1;
@@ -66,6 +76,7 @@ function shuffledVowels(vowels, count=25) {
 }
 function render(index) {
   clearTimeout(practiceTimer);
+  document.getElementById('again').hidden = true;
   document.getElementById('show-previous').hidden = true;
   document.body.classList.remove('timed-practice');
   current=index;
@@ -114,6 +125,7 @@ function render(index) {
       const label=document.createElement('span');label.textContent=`${vowel.name} · ${vowel.sound}`;item.append(glyph,label);legend.append(item);
     }
   }
+  resetScroll();
 }
 document.getElementById('lessons').addEventListener('change', event => {
   const value = event.target.value;
@@ -121,11 +133,18 @@ document.getElementById('lessons').addEventListener('change', event => {
   else render(Number(value));
 });
 document.getElementById('shuffle').addEventListener('click',()=>{render(current);document.getElementById('announcement').textContent='New randomized practice grid ready.';});
+
+document.getElementById('again').addEventListener('click', () => {
+  if (lastPracticeGlyph && lastPracticeSpeed) startTimedPractice(lastPracticeSpeed, true);
+});
 document.getElementById('show-previous').addEventListener('click', () => {
   if (!lastPracticeGlyph) return;
   clearTimeout(practiceTimer);
   document.getElementById('practice').replaceChildren(lastPracticeGlyph);
   document.getElementById('lessons').selectedIndex = -1;
+  resetScroll();
   document.getElementById('announcement').textContent = 'Previous letter and vowel shown. Select a speed to try another letter.';
 });
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.addEventListener('pageshow', resetScroll);
 render(0);
